@@ -28,12 +28,6 @@ body {
     overflow-x: hidden;
 }
 
-/* 滚动条美化 */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #dfe4ea; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #a4b0be; }
-
 /* 侧边栏 */
 .sidebar {
     width: 240px;
@@ -81,8 +75,8 @@ body {
 .nav-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
+    gap: 8px;
+    padding: 10px 12px;
     border-radius: 12px;
     color: #57606f;
     font-weight: 600;
@@ -96,8 +90,6 @@ body {
     background-color: #fff0f3;
     color: var(--primary-pink);
 }
-
-.nav-item:active { transform: scale(0.98); }
 
 .nav-item.active {
     background-color: var(--primary-pink);
@@ -168,7 +160,7 @@ body {
 .card-title { font-size: 18px; font-weight: bold; }
 .section-desc { font-size: 13px; color: var(--text-muted); }
 
-/* 朗读控制面板 */
+/* 朗读控制 */
 .tts-controls {
     display: flex;
     align-items: center;
@@ -199,7 +191,7 @@ body {
 .btn-refresh { background: #70a1ff; color: white; padding: 6px 14px; font-size: 13px; }
 .btn-submit { background: #2ed573; color: white; padding: 0 20px; font-size: 15px; border-radius: 10px; }
 
-/* 拼音/字母/单词 卡片网格 */
+/* 拼音/字母/单词网格 */
 .pinyin-grid, .alphabet-grid, .word-card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -222,28 +214,38 @@ body {
     box-shadow: 0 4px 10px rgba(0,0,0,0.06);
 }
 
-.pinyin-card:active, .letter-card:active, .word-card:active { transform: scale(0.96); }
-
 .letter-card { border-color: #ffa502; background: #fffdf9; }
 .word-card { border-color: #ff4757; background: #fff0f3; }
 
 .pinyin-big, .letter-big { font-size: 30px; font-weight: 900; color: #2ed573; line-height: 1.1; }
 .letter-big { color: #ff4757; }
 .pinyin-word, .letter-word { font-size: 13px; font-weight: bold; color: #2f3542; margin-top: 4px; }
-.pinyin-cn, .letter-cn, .word-cn { font-size: 11px; color: #747d8c; }
+.letter-cn, .word-cn { font-size: 11px; color: #747d8c; }
 .word-icon { font-size: 28px; }
 .word-en { font-size: 14px; font-weight: bold; color: #ff4757; margin-top: 2px; }
 
-/* 搜索框 */
+/* 单词工具栏：搜索框 + 换一组 */
+.word-tools {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
 .search-input {
+    flex: 1;
     padding: 10px 16px;
     border-radius: 20px;
     border: 1px solid #dfe4ea;
-    width: 100%;
     outline: none;
     font-size: 14px;
 }
 .search-input:focus { border-color: var(--primary-pink); }
+
+.word-tools .btn-refresh {
+    padding: 10px 16px;
+    font-size: 13px;
+    white-space: nowrap;
+}
 
 /* 计时器与算术 */
 .timer-display { font-size: 52px; font-weight: bold; color: var(--primary-pink); text-align: center; }
@@ -274,20 +276,59 @@ body {
 .reward-cost { font-size: 12px; color: #d63031; font-weight: bold; }
 .btn-redeem { background: #ffa502; color: white; padding: 5px 12px; font-size: 12px; }
 
-/* 古诗 */
+/* 古诗及诗意解读 */
 .poem-card-body { background: #fff8ed; border-radius: 12px; padding: 16px; text-align: center; border: 1px solid #ffeaa7; display: flex; flex-direction: column; gap: 10px; }
 .poem-title { font-size: 18px; font-weight: bold; }
 .poem-author { font-size: 12px; color: #636e72; }
 .poem-content { font-size: 16px; line-height: 1.8; font-family: "Kaiti", "STKaiti", serif; }
-.btn-speak { background: #2ed573; color: white; padding: 8px 16px; font-size: 13px; align-self: center; }
 
-/* 📱 移动端自适应 */
+.poem-explain-box {
+    background: #ffffff;
+    border: 1px dashed #ffa502;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: left;
+    font-size: 13px;
+    color: #57606f;
+    line-height: 1.6;
+}
+.poem-explain-title { font-weight: bold; color: #ff9f43; margin-bottom: 4px; }
+
+.poem-btn-group { display: flex; justify-content: center; gap: 10px; }
+.btn-speak { background: #2ed573; color: white; padding: 8px 16px; font-size: 13px; }
+.btn-explain-speak { background: #1e90ff; }
+
+/* 📱 移动端适配：导航栏重构为两排 (4x2) */
 @media (max-width: 768px) {
     body { flex-direction: column; }
-    .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #ffeaa7; padding: 10px; position: sticky; top: 0; background: #fff; }
+    .sidebar { 
+        width: 100%; 
+        border-right: none; 
+        border-bottom: 1px solid #ffeaa7; 
+        padding: 10px; 
+        position: sticky; 
+        top: 0; 
+        background: #fff; 
+    }
     .user-card { display: none; }
-    .nav-list { flex-direction: row; overflow-x: auto; white-space: nowrap; }
-    .nav-item { padding: 6px 12px; font-size: 13px; flex-shrink: 0; }
+    
+    /* 两排导航按钮布局 */
+    .nav-list { 
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        white-space: normal;
+    }
+    
+    .nav-item { 
+        padding: 6px 2px; 
+        font-size: 11px; 
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        gap: 3px;
+    }
+
     .main-content { padding: 12px; }
     .pinyin-grid, .alphabet-grid, .word-card-grid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); }
 }
