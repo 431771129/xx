@@ -10,6 +10,7 @@
     --accent-yellow: #ffa502;
     --accent-purple: #9b59b6;
     --border-radius: 16px;
+    --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 * {
@@ -28,11 +29,27 @@ body {
     overflow-x: hidden;
 }
 
+/* 全局滚动条美化 */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #dfe4ea;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #a4b0be;
+}
+
 /* 侧边栏 */
 .sidebar {
     width: 240px;
     background: #ffffff;
-    border-right: 1px solid #eccc68;
+    border-right: 1px solid #ffeaa7;
     padding: 20px 15px;
     display: flex;
     flex-direction: column;
@@ -40,13 +57,14 @@ body {
     box-shadow: 2px 0 10px rgba(0,0,0,0.03);
     z-index: 100;
     transition: transform 0.3s ease;
+    flex-shrink: 0;
 }
 
 .brand {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 5px 20px 5px;
+    padding: 10px 5px 15px 5px;
     border-bottom: 2px dashed #f1f2f6;
 }
 
@@ -70,6 +88,7 @@ body {
     align-items: center;
     gap: 4px;
     border: 1px solid #ffeaa7;
+    box-shadow: 0 2px 6px rgba(255, 165, 2, 0.15);
 }
 
 .nav-group-title {
@@ -79,23 +98,34 @@ body {
     font-weight: 600;
 }
 
+.nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
 .nav-item {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 16px;
+    padding: 10px 14px;
     border-radius: 12px;
     color: #57606f;
     text-decoration: none;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
+    user-select: none;
 }
 
 .nav-item:hover {
-    background-color: #f1f2f6;
+    background-color: #fff0f3;
     color: var(--primary-pink);
+}
+
+.nav-item:active {
+    transform: scale(0.98);
 }
 
 .nav-item.active {
@@ -123,6 +153,7 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 18px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .user-info {
@@ -145,7 +176,7 @@ body {
 .main-content {
     flex: 1;
     padding: 20px;
-    max-width: 800px;
+    max-width: 860px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -169,10 +200,10 @@ body {
 }
 
 .card {
-    background: white;
+    background: var(--card-bg);
     border-radius: var(--border-radius);
     padding: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    box-shadow: var(--shadow-soft);
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -190,6 +221,22 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.section-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* 按钮基础类与交互 */
+.btn-refresh, .btn-danger, .btn-submit, .btn-action, .btn-check, .btn-redeem, .btn-speak {
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.btn-refresh:active, .btn-danger:active, .btn-submit:active, .btn-action:active, .btn-check:active, .btn-redeem:active, .btn-speak:active {
+    transform: scale(0.95);
 }
 
 .btn-refresh {
@@ -228,29 +275,33 @@ body {
 /* 朗读控制面板 */
 .tts-controls {
     background: #f1f2f6;
-    padding: 10px 15px;
-    border-radius: 10px;
+    padding: 12px 18px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     gap: 15px;
     font-size: 13px;
     color: #57606f;
+    flex-wrap: wrap;
 }
 
 .tts-controls label {
     display: flex;
     align-items: center;
     gap: 6px;
+    cursor: pointer;
 }
 
 .tts-controls input[type="range"] {
-    width: 80px;
+    width: 90px;
+    accent-color: var(--primary-pink);
+    cursor: pointer;
 }
 
 /* 拼音卡片 */
 .pinyin-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
     gap: 12px;
 }
 
@@ -262,12 +313,18 @@ body {
     text-align: center;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    user-select: none;
 }
 
 .pinyin-card:hover {
     border-color: #ff4757;
-    transform: scale(1.05);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+}
+
+.pinyin-card:active {
+    transform: scale(0.96);
 }
 
 .pinyin-card.double-letter {
@@ -298,6 +355,11 @@ body {
     color: #747d8c;
 }
 
+.highlight-pinyin {
+    color: #ff4757;
+    font-weight: bold;
+}
+
 /* 1. 运动计时器 */
 .timer-display {
     font-size: 56px;
@@ -306,6 +368,7 @@ body {
     text-align: center;
     letter-spacing: 2px;
     margin: 10px 0;
+    font-variant-numeric: tabular-nums;
 }
 
 .timer-actions {
@@ -317,7 +380,7 @@ body {
 .btn-action {
     border: none;
     padding: 10px 24px;
-    border-radius: 10px;
+    border-radius: 20px;
     color: white;
     font-weight: bold;
     font-size: 15px;
@@ -325,6 +388,7 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .btn-start { background-color: #2ed573; }
@@ -338,14 +402,25 @@ body {
     font-size: 14px;
     font-weight: 500;
     flex-wrap: wrap;
+    background: #f8f9fa;
+    padding: 10px 14px;
+    border-radius: 10px;
+}
+
+.math-options label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
 }
 
 .math-question {
-    font-size: 32px;
+    font-size: 36px;
     font-weight: bold;
     text-align: center;
     margin: 15px 0;
     color: #2f3542;
+    letter-spacing: 1px;
 }
 
 .math-input-group {
@@ -358,10 +433,12 @@ body {
     width: 100px;
     height: 44px;
     border: 2px solid #dfe4ea;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 22px;
+    font-weight: bold;
     text-align: center;
     outline: none;
+    transition: border-color 0.2s;
 }
 
 .math-input:disabled {
@@ -377,8 +454,8 @@ body {
     background-color: #2ed573;
     color: white;
     border: none;
-    padding: 0 20px;
-    border-radius: 8px;
+    padding: 0 24px;
+    border-radius: 10px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
@@ -389,17 +466,38 @@ body {
     cursor: not-allowed;
 }
 
+.math-feedback {
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    min-height: 22px;
+    margin-top: 5px;
+}
+
 /* 3. 错题本 */
+.mistake-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .mistake-box {
-    background: #f8d7da;
-    border-left: 4px solid #dc3545;
-    padding: 10px 15px;
+    background: #ffeef0;
+    border-left: 4px solid #ff4757;
+    padding: 12px 16px;
     border-radius: 8px;
-    font-size: 14px;
-    color: #721c24;
+    font-size: 15px;
+    color: #d63031;
+    font-weight: 500;
 }
 
 /* 今日打卡模块 */
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .task-item {
     display: flex;
     align-items: center;
@@ -422,7 +520,7 @@ body {
     background: #2ed573;
     color: white;
     border: none;
-    padding: 6px 14px;
+    padding: 6px 16px;
     border-radius: 20px;
     font-size: 13px;
     font-weight: bold;
@@ -437,7 +535,7 @@ body {
 /* 奖励中心模块 */
 .reward-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 15px;
 }
 
@@ -451,10 +549,11 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    box-shadow: 0 2px 8px rgba(255, 234, 167, 0.3);
 }
 
 .reward-icon { font-size: 36px; }
-.reward-title { font-size: 15px; font-weight: bold; color: #2d3436; }
+.reward-title { font-size: 14px; font-weight: bold; color: #2d3436; }
 .reward-cost { font-size: 13px; color: #d63031; font-weight: bold; }
 
 .btn-redeem {
@@ -484,11 +583,12 @@ body {
 .poem-author { font-size: 13px; color: #636e72; }
 
 .poem-content {
-    font-size: 17px;
+    font-size: 18px;
     line-height: 1.8;
     color: #2d3436;
     margin: 10px 0;
-    font-family: "Kaiti", "STKaiti", serif;
+    font-family: "Kaiti", "STKaiti", "楷体", serif;
+    font-weight: 500;
 }
 
 .poem-details {
@@ -499,7 +599,7 @@ body {
     color: #636e72;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
 }
 
 .badge-tag {
@@ -516,7 +616,7 @@ body {
     background: #2ed573;
     color: white;
     border: none;
-    padding: 8px 16px;
+    padding: 8px 18px;
     border-radius: 20px;
     font-size: 14px;
     font-weight: bold;
@@ -559,7 +659,7 @@ body {
 .btn-icon-speak {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 22px;
     cursor: pointer;
     padding: 4px;
     transition: transform 0.2s;
@@ -569,7 +669,7 @@ body {
 
 .word-card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
     gap: 12px;
 }
 
@@ -582,20 +682,22 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     cursor: pointer;
     transition: transform 0.2s;
+    user-select: none;
 }
 
-.word-card:hover { transform: translateY(-4px); }
+.word-card:hover { transform: translateY(-3px); }
+.word-card:active { transform: scale(0.96); }
 .word-icon { font-size: 32px; }
-.word-en { font-size: 16px; font-weight: bold; color: #ff4757; }
+.word-en { font-size: 15px; font-weight: bold; color: #ff4757; }
 .word-cn { font-size: 12px; color: #747d8c; }
 
-/* 6. 幼升小英文字母卡片 */
+/* 6. 英文字母卡片 */
 .alphabet-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
     gap: 12px;
 }
 
@@ -607,16 +709,19 @@ body {
     text-align: center;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    user-select: none;
 }
 
 .letter-card:hover {
     border-color: #ff4757;
-    transform: scale(1.05);
+    transform: translateY(-3px);
 }
 
+.letter-card:active { transform: scale(0.96); }
+
 .letter-big {
-    font-size: 36px;
+    font-size: 32px;
     font-weight: 900;
     color: #ff4757;
     line-height: 1.1;
@@ -632,16 +737,65 @@ body {
 .letter-cn { font-size: 11px; color: #747d8c; }
 
 .search-input {
-    padding: 8px 14px;
+    padding: 10px 16px;
     border-radius: 20px;
     border: 1px solid #dfe4ea;
     width: 100%;
     margin-bottom: 10px;
     outline: none;
     font-size: 14px;
+    transition: border-color 0.2s;
 }
 
+.search-input:focus {
+    border-color: var(--primary-pink);
+}
+
+/* 📱 响应式布局优化 (移动端 & 平板) */
 @media (max-width: 768px) {
-    body { flex-direction: column; }
-    .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #ddd; }
+    body { 
+        flex-direction: column; 
+    }
+    
+    .sidebar { 
+        width: 100%; 
+        border-right: none; 
+        border-bottom: 1px solid #ffeaa7; 
+        padding: 12px 15px;
+        gap: 8px;
+        position: sticky;
+        top: 0;
+        background: #ffffff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .nav-group-title, .user-card { 
+        display: none; /* 移动端隐藏侧边栏次要信息，保持界面简洁 */
+    }
+
+    .nav-list {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-item {
+        padding: 8px 12px;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+
+    .main-content {
+        padding: 12px;
+    }
+
+    .timer-display {
+        font-size: 42px;
+    }
+
+    .pinyin-grid, .alphabet-grid, .word-card-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    }
 }
