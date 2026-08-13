@@ -1,4 +1,4 @@
-// ==================== 1. 核心 TTS 朗读引擎 (极简版) ====================
+// ==================== 1. 核心 TTS 朗读引擎 ====================
 function speakText(text, lang = 'zh-CN') {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel(); // 立即停止上一句
@@ -11,17 +11,17 @@ function speakText(text, lang = 'zh-CN') {
     window.speechSynthesis.speak(utterance);
 }
 
-// 拼音点击：只读 “拼音, 词语” (例: "a，阿姨")
+// 拼音点击："a，阿姨"
 function speakPinyin(pinyin, word) {
     speakText(`${pinyin}，${word}`, 'zh-CN');
 }
 
-// 字母点击：只读 “字母, 单词” (例: "A, Apple")
+// 字母点击："A, Apple"
 function speakLetter(letter, word) {
     speakText(`${letter}, ${word}`, 'en-US');
 }
 
-// 单词点击：只读英文单词 (例: "apple")
+// 单词点击：英文单词
 function speakWord(en) {
     speakText(en, 'en-US');
 }
@@ -69,26 +69,26 @@ const wordList = [
     // 动物 30
     { icon: "🐶", en: "dog", cn: "狗" }, { icon: "🐱", en: "cat", cn: "猫" }, { icon: "🐭", en: "mouse", cn: "老鼠" },
     { icon: "🐰", en: "rabbit", cn: "兔子" }, { icon: "🐻", en: "bear", cn: "熊" }, { icon: "🐼", en: "panda", cn: "熊猫" },
-    { icon: "🐯", en: "tiger", cn: "老虎" }, { icon: "狮", en: "lion", cn: "狮子" }, { icon: "🐮", en: "cow", cn: "奶牛" },
+    { icon: "🐯", en: "tiger", cn: "老虎" }, { icon: "🦁", en: "lion", cn: "狮子" }, { icon: "🐮", en: "cow", cn: "奶牛" },
     { icon: "🐷", en: "pig", cn: "猪" }, { icon: "🐵", en: "monkey", cn: "猴子" }, { icon: "🦆", en: "duck", cn: "鸭子" },
-    { icon: "🐔", en: "chicken", cn: "小鸡" }, { icon: "🐦", en: "bird", cn: "小鸟" }, { icon: "青", en: "frog", cn: "青蛙" },
-    { icon: "🐘", en: "elephant", cn: "大象" }, { icon: "长", en: "giraffe", cn: "长颈鹿" }, { icon: "斑", en: "zebra", cn: "斑马" },
+    { icon: "🐔", en: "chicken", cn: "小鸡" }, { icon: "🐦", en: "bird", cn: "小鸟" }, { icon: "🐸", en: "frog", cn: "青蛙" },
+    { icon: "🐘", en: "elephant", cn: "大象" }, { icon: "🦒", en: "giraffe", cn: "长颈鹿" }, { icon: "🦓", en: "zebra", cn: "斑马" },
     { icon: "🐴", en: "horse", cn: "马" }, { icon: "🐑", en: "sheep", cn: "绵羊" }, { icon: "🐐", en: "goat", cn: "山羊" },
     { icon: "🦊", en: "fox", cn: "狐狸" }, { icon: "🐺", en: "wolf", cn: "狼" }, { icon: "🐍", en: "snake", cn: "蛇" },
-    { icon: "🐢", en: "turtle", cn: "乌龟" }, { icon: "🐟", en: "fish", cn: "鱼" }, { icon: "海", en: "dolphin", cn: "海豚" },
+    { icon: "🐢", en: "turtle", cn: "乌龟" }, { icon: "🐟", en: "fish", cn: "鱼" }, { icon: "🐬", en: "dolphin", cn: "海豚" },
     { icon: "🐳", en: "whale", cn: "鲸鱼" }, { icon: "🐝", en: "bee", cn: "蜜蜂" }, { icon: "🦋", en: "butterfly", cn: "蝴蝶" },
 
     // 果蔬 30
     { icon: "🍎", en: "apple", cn: "苹果" }, { icon: "🍌", en: "banana", cn: "香蕉" }, { icon: "🍊", en: "orange", cn: "橙子" },
     { icon: "🍇", en: "grape", cn: "葡萄" }, { icon: "🍉", en: "watermelon", cn: "西瓜" }, { icon: "🍓", en: "strawberry", cn: "草莓" },
-    { icon: "🍑", en: "peach", cn: "蜜桃" }, { icon: "🍍", en: "pineapple", cn: "菠萝" }, { icon: "芒", en: "mango", cn: "芒果" },
-    { icon: "🍋", en: "lemon", cn: "柠檬" }, { icon: "🍒", en: "cherry", cn: "樱桃" }, { icon: "梨", en: "pear", cn: "梨" },
-    { icon: "🥑", en: "avocado", cn: "牛油果" }, { icon: "椰", en: "coconut", cn: "椰子" }, { icon: "🍅", en: "tomato", cn: "番茄" },
+    { icon: "peach", icon: "🍑", en: "peach", cn: "蜜桃" }, { icon: "🍍", en: "pineapple", cn: "菠萝" }, { icon: "🥭", en: "mango", cn: "芒果" },
+    { icon: "🍋", en: "lemon", cn: "柠檬" }, { icon: "🍒", en: "cherry", cn: "樱桃" }, { icon: "🍐", en: "pear", cn: "梨" },
+    { icon: "🥑", en: "avocado", cn: "牛油果" }, { icon: "🥥", en: "coconut", cn: "椰子" }, { icon: "🍅", en: "tomato", cn: "番茄" },
     { icon: "🥔", en: "potato", cn: "土豆" }, { icon: "🥕", en: "carrot", cn: "胡萝卜" }, { icon: "🌽", en: "corn", cn: "玉米" },
-    { icon: "黄", en: "cucumber", cn: "黄瓜" }, { icon: "🥦", en: "broccoli", cn: "西兰花" }, { icon: "洋", en: "onion", cn: "洋葱" },
-    { icon: "蒜", en: "garlic", cn: "大蒜" }, { icon: "🍄", en: "mushroom", cn: "蘑菇" }, { icon: "🎃", en: "pumpkin", cn: "南瓜" },
-    { icon: "茄", en: "eggplant", cn: "茄子" }, { icon: "🌱", en: "bean", cn: "豆角" }, { icon: "🌶️", en: "pepper", cn: "辣椒" },
-    { icon: "🥬", en: "cabbage", cn: "卷心菜" }, { icon: "🥗", en: "salad", cn: "沙拉" }, { icon: "瓜", en: "melon", cn: "哈密瓜" },
+    { icon: "🥒", en: "cucumber", cn: "黄瓜" }, { icon: "🥦", en: "broccoli", cn: "西兰花" }, { icon: "🧅", en: "onion", cn: "洋葱" },
+    { icon: "🧄", en: "garlic", cn: "大蒜" }, { icon: "🍄", en: "mushroom", cn: "蘑菇" }, { icon: "🎃", en: "pumpkin", cn: "南瓜" },
+    { icon: "🍆", en: "eggplant", cn: "茄子" }, { icon: "🌱", en: "bean", cn: "豆角" }, { icon: "🌶️", en: "pepper", cn: "辣椒" },
+    { icon: "🥬", en: "cabbage", cn: "卷心菜" }, { icon: "🥗", en: "salad", cn: "沙拉" }, { icon: "🍈", en: "melon", cn: "哈密瓜" },
 
     // 食物与饮品 25
     { icon: "🍚", en: "rice", cn: "米饭" }, { icon: "🍜", en: "noodle", cn: "面条" }, { icon: "🍞", en: "bread", cn: "面包" },
@@ -98,7 +98,7 @@ const wordList = [
     { icon: "🍕", en: "pizza", cn: "披萨" }, { icon: "🍔", en: "hamburger", cn: "汉堡" }, { icon: "🍟", en: "fries", cn: "薯条" },
     { icon: "🥪", en: "sandwich", cn: "三明治" }, { icon: "🍫", en: "chocolate", cn: "巧克力" }, { icon: "🍬", en: "candy", cn: "糖果" },
     { icon: "🍪", en: "cookie", cn: "饼干" }, { icon: "🍲", en: "soup", cn: "汤" }, { icon: "🧀", en: "cheese", cn: "奶酪" },
-    { icon: "🧈", en: "butter", cn: "黄油" }, { icon: "爆", en: "popcorn", cn: "爆米花" }, { icon: "🍯", en: "honey", cn: "蜂蜜" },
+    { icon: "🧈", en: "butter", cn: "黄油" }, { icon: "🍿", en: "popcorn", cn: "爆米花" }, { icon: "🍯", en: "honey", cn: "蜂蜜" },
     { icon: "🥮", en: "mooncakes", cn: "月饼" },
 
     // 人物与家庭 20
@@ -113,10 +113,10 @@ const wordList = [
     // 身体部位 20
     { icon: "🗣️", en: "head", cn: "头部" }, { icon: "👀", en: "eye", cn: "眼睛" }, { icon: "👂", en: "ear", cn: "耳朵" },
     { icon: "👃", en: "nose", cn: "鼻子" }, { icon: "👄", en: "mouth", cn: "嘴巴" }, { icon: "🦷", en: "tooth", cn: "牙齿" },
-    { icon: "👅", en: "tongue", cn: "舌头" }, { icon: "😀", en: "face", cn: "脸" }, { icon: "💇", en: "hair", cn: "头发" },
+    { icon: "舌", en: "tongue", cn: "舌头" }, { icon: "😀", en: "face", cn: "脸" }, { icon: "💇", en: "hair", cn: "头发" },
     { icon: "💪", en: "arm", cn: "手臂" }, { icon: "🖐️", en: "hand", cn: "手" }, { icon: "☝️", en: "finger", cn: "手指" },
     { icon: "🦵", en: "leg", cn: "腿" }, { icon: "🦶", en: "foot", cn: "脚" }, { icon: "🦶", en: "toe", cn: "脚趾" },
-    { icon: "🫀", en: "heart", cn: "心脏" }, { icon: "🫁", en: "lung", cn: "肺" }, { icon: "骨", en: "bone", cn: "骨头" },
+    { icon: "🫀", en: "heart", cn: "心脏" }, { icon: "🫁", en: "lung", cn: "肺" }, { icon: "🦴", en: "bone", cn: "骨头" },
     { icon: "🩸", en: "blood", cn: "血液" }, { icon: "🧠", en: "brain", cn: "大脑" },
 
     // 颜色与形状 20
@@ -126,7 +126,7 @@ const wordList = [
     { icon: "⚪", en: "white", cn: "白色" }, { icon: "🩶", en: "gray", cn: "灰色" }, { icon: "🪙", en: "gold", cn: "金色" },
     { icon: "⭕", en: "circle", cn: "圆形" }, { icon: "⏹️", en: "square", cn: "正方形" }, { icon: "🔺", en: "triangle", cn: "三角形" },
     { icon: "⭐", en: "star", cn: "星形" }, { icon: "❤️", en: "heart", cn: "心形" }, { icon: "🔷", en: "diamond", cn: "菱形" },
-    { icon: "椭", en: "oval", cn: "椭圆形" }, { icon: "长", en: "rectangle", cn: "长方形" },
+    { icon: "🥚", en: "oval", cn: "椭圆形" }, { icon: "▭", en: "rectangle", cn: "长方形" },
 
     // 数字与时间 20
     { icon: "1️⃣", en: "one", cn: "一" }, { icon: "2️⃣", en: "two", cn: "二" }, { icon: "3️⃣", en: "three", cn: "三" },
@@ -138,10 +138,10 @@ const wordList = [
     { icon: "📆", en: "week", cn: "星期" }, { icon: "⏳", en: "time", cn: "时间" },
 
     // 学校用品 25
-    { icon: "🏫", en: "school", cn: "学校" }, { icon: "教", en: "classroom", cn: "教室" }, { icon: "📖", en: "book", cn: "书本" },
+    { icon: "🏫", en: "school", cn: "学校" }, { icon: "🏫", en: "classroom", cn: "教室" }, { icon: "📖", en: "book", cn: "书本" },
     { icon: "✏️", en: "pencil", cn: "铅笔" }, { icon: "🖊️", en: "pen", cn: "钢笔" }, { icon: "🖍️", en: "crayon", cn: "蜡笔" },
-    { icon: "橡", en: "eraser", cn: "橡皮擦" }, { icon: "📏", en: "ruler", cn: "尺子" }, { icon: "✂️", en: "scissors", cn: "剪刀" },
-    { icon: "🎒", en: "bag", cn: "书包" }, { icon: "桌", en: "desk", cn: "课桌" }, { icon: "🪑", en: "chair", cn: "椅子" },
+    { icon: "🧹", en: "eraser", cn: "橡皮擦" }, { icon: "📏", en: "ruler", cn: "尺子" }, { icon: "✂️", en: "scissors", cn: "剪刀" },
+    { icon: "🎒", en: "bag", cn: "书包" }, { icon: "🪑", en: "desk", cn: "课桌" }, { icon: "🪑", en: "chair", cn: "椅子" },
     { icon: "⬛", en: "blackboard", cn: "黑板" }, { icon: "📄", en: "paper", cn: "纸张" }, { icon: "🎨", en: "paint", cn: "颜料" },
     { icon: "🖌️", en: "brush", cn: "画笔" }, { icon: "💻", en: "computer", cn: "电脑" }, { icon: "🗺️", en: "map", cn: "地图" },
     { icon: "🌐", en: "globe", cn: "地球仪" }, { icon: "🔔", en: "bell", cn: "铃铛" }, { icon: "📝", en: "test", cn: "考试" },
@@ -150,61 +150,81 @@ const wordList = [
 
     // 家居物品 30
     { icon: "🏠", en: "house", cn: "房子" }, { icon: "🚪", en: "door", cn: "门" }, { icon: "🪟", en: "window", cn: "窗户" },
-    { icon: "🛏️", en: "bed", cn: "床" }, { icon: "🛋️", en: "sofa", cn: "沙发" }, { icon: "桌", en: "table", cn: "桌子" },
+    { icon: "🛏️", en: "bed", cn: "床" }, { icon: "🛋️", en: "sofa", cn: "沙发" }, { icon: "🛋️", en: "table", cn: "桌子" },
     { icon: "📺", en: "tv", cn: "电视" }, { icon: "💡", en: "lamp", cn: "台灯" }, { icon: "🔑", en: "key", cn: "钥匙" },
     { icon: "📱", en: "phone", cn: "电话" }, { icon: "🪞", en: "mirror", cn: "镜子" }, { icon: "🪥", en: "toothbrush", cn: "牙刷" },
-    { icon: "肥", en: "soap", cn: "肥皂" }, { icon: "毛", en: "towel", cn: "毛巾" }, { icon: "📦", en: "box", cn: "盒子" },
-    { icon: "桶", en: "bucket", cn: "水桶" }, { icon: "扫", en: "broom", cn: "扫帚" }, { icon: "🔒", en: "lock", cn: "锁" },
-    { icon: "⏰", en: "clock", cn: "闹钟" }, { icon: "🥛", en: "cup", cn: "杯子" }, { icon: "盘", en: "plate", cn: "盘子" },
+    { icon: "🧴", en: "soap", cn: "肥皂" }, { icon: "🧴", en: "towel", cn: "毛巾" }, { icon: "📦", en: "box", cn: "盒子" },
+    { icon: "🪣", en: "bucket", cn: "水桶" }, { icon: "🧹", en: "broom", cn: "扫帚" }, { icon: "🔒", en: "lock", cn: "锁" },
+    { icon: "⏰", en: "clock", cn: "闹钟" }, { icon: "🥛", en: "cup", cn: "杯子" }, { icon: "🍽️", en: "plate", cn: "盘子" },
     { icon: "🥣", en: "bowl", cn: "碗" }, { icon: "🥄", en: "spoon", cn: "勺子" }, { icon: "🍴", en: "fork", cn: "叉子" },
     { icon: "🔪", en: "knife", cn: "刀" }, { icon: "🗑️", en: "bin", cn: "垃圾桶" }, { icon: "☂️", en: "umbrella", cn: "雨伞" },
     { icon: "🖼️", en: "picture", cn: "画" }, { icon: "🔋", en: "battery", cn: "电池" }, { icon: "🎁", en: "gift", cn: "礼物" },
 
     // 服饰 15
     { icon: "👕", en: "shirt", cn: "衬衫" }, { icon: "👕", en: "t-shirt", cn: "T恤" }, { icon: "👖", en: "pants", cn: "裤子" },
-    { icon: "👗", en: "dress", cn: "连衣裙" }, { icon: "裙", en: "skirt", cn: "短裙" }, { icon: "🧥", en: "coat", cn: "外套" },
+    { icon: "👗", en: "dress", cn: "连衣裙" }, { icon: "👘", en: "skirt", cn: "短裙" }, { icon: "🧥", en: "coat", cn: "外套" },
     { icon: "🧦", en: "socks", cn: "袜子" }, { icon: "👟", en: "shoes", cn: "鞋子" }, { icon: "🧢", en: "hat", cn: "帽子" },
     { icon: "🧤", en: "gloves", cn: "手套" }, { icon: "🧣", en: "scarf", cn: "围巾" }, { icon: "👓", en: "glasses", cn: "眼镜" },
-    { icon: "👔", en: "tie", cn: "领带" }, { icon: "裤", en: "shorts", cn: "短裤" }, { icon: "👢", en: "boots", cn: "靴子" },
+    { icon: "👔", en: "tie", cn: "领带" }, { icon: "🩳", en: "shorts", cn: "短裤" }, { icon: "👢", en: "boots", cn: "靴子" },
 
     // 交通 20
     { icon: "🚗", en: "car", cn: "汽车" }, { icon: "🚌", en: "bus", cn: "公交车" }, { icon: "🚲", en: "bike", cn: "自行车" },
     { icon: "🏍️", en: "motorcycle", cn: "摩托车" }, { icon: "🚂", en: "train", cn: "火车" }, { icon: "✈️", en: "plane", cn: "飞机" },
     { icon: "🚁", en: "helicopter", cn: "直升机" }, { icon: "🚢", en: "ship", cn: "轮船" }, { icon: "🚤", en: "boat", cn: "小船" },
-    { icon: "🚀", en: "rocket", cn: "火箭" }, { icon: "出租", en: "taxi", cn: "出租车" }, { icon: "🚑", en: "ambulance", cn: "救护车" },
-    { icon: "🚒", en: "fire engine", cn: "消防车" }, { icon: "警", en: "police car", cn: "警车" }, { icon: "🚚", en: "truck", cn: "卡车" },
-    { icon: "拖", en: "tractor", cn: "拖拉机" }, { icon: "🚇", en: "subway", cn: "地铁" }, { icon: "伞", en: "parachute", cn: "降落伞" },
-    { icon: "🛸", en: "ufo", cn: "飞碟" }, { icon: "轮", en: "wheel", cn: "车轮" },
+    { icon: "🚀", en: "rocket", cn: "火箭" }, { icon: "🛺", en: "taxi", cn: "出租车" }, { icon: "🚑", en: "ambulance", cn: "救护车" },
+    { icon: "🚒", en: "fire engine", cn: "消防车" }, { icon: "🚓", en: "police car", cn: "警车" }, { icon: "🚚", en: "truck", cn: "卡车" },
+    { icon: "🚜", en: "tractor", cn: "拖拉机" }, { icon: "🚇", en: "subway", cn: "地铁" }, { icon: "🪂", en: "parachute", cn: "降落伞" },
+    { icon: "🛸", en: "ufo", cn: "飞碟" }, { icon: "🛞", en: "wheel", cn: "车轮" },
 
     // 自然天气 25
     { icon: "☀️", en: "sun", cn: "太阳" }, { icon: "🌙", en: "moon", cn: "月亮" }, { icon: "⭐", en: "star", cn: "星星" },
     { icon: "☁️", en: "cloud", cn: "云" }, { icon: "🌧️", en: "rain", cn: "雨" }, { icon: "❄️", en: "snow", cn: "雪" },
     { icon: "💨", en: "wind", cn: "风" }, { icon: "🌈", en: "rainbow", cn: "彩虹" }, { icon: "⚡", en: "lightning", cn: "闪电" },
     { icon: "🌳", en: "tree", cn: "树木" }, { icon: "🌸", en: "flower", cn: "花朵" }, { icon: "🌱", en: "grass", cn: "草" },
-    { icon: "🍃", en: "leaf", cn: "树叶" }, { icon: "⛰️", en: "mountain", cn: "大山" }, { icon: "河", en: "river", cn: "河流" },
-    { icon: "🌊", en: "sea", cn: "大海" }, { icon: "沙", en: "beach", cn: "沙滩" }, { icon: "沙", en: "desert", cn: "沙漠" },
-    { icon: "石", en: "stone", cn: "石头" }, { icon: "🔥", en: "fire", cn: "火" }, { icon: "冰", en: "ice", cn: "冰" },
-    { icon: "🌲", en: "forest", cn: "森林" }, { icon: "岛", en: "island", cn: "岛屿" }, { icon: "🪐", en: "planet", cn: "行星" },
+    { icon: "🍃", en: "leaf", cn: "树叶" }, { icon: "⛰️", en: "mountain", cn: "大山" }, { icon: "🏞️", en: "river", cn: "河流" },
+    { icon: "🌊", en: "sea", cn: "大海" }, { icon: "🏖️", en: "beach", cn: "沙滩" }, { icon: "🏜️", en: "desert", cn: "沙漠" },
+    { icon: "🪨", en: "stone", cn: "石头" }, { icon: "🔥", en: "fire", cn: "火" }, { icon: "❄️", en: "ice", cn: "冰" },
+    { icon: "🌲", en: "forest", cn: "森林" }, { icon: "🏝️", en: "island", cn: "岛屿" }, { icon: "🪐", en: "planet", cn: "行星" },
     { icon: "🌌", en: "sky", cn: "天空" },
 
     // 动作 25
-    { icon: "跑", en: "run", cn: "跑" }, { icon: "走", en: "walk", cn: "走" }, { icon: "跳", en: "jump", cn: "跳" },
-    { icon: "🏊", en: "swim", cn: "游泳" }, { icon: "舞", en: "dance", cn: "跳舞" }, { icon: "唱", en: "sing", cn: "唱歌" },
-    { icon: "读", en: "read", cn: "阅读" }, { icon: "写", en: "write", cn: "写字" }, { icon: "画", en: "draw", cn: "绘画" },
-    { icon: "吃", en: "eat", cn: "吃" }, { icon: "喝", en: "drink", cn: "喝" }, { icon: "睡", en: "sleep", cn: "睡觉" },
-    { icon: "看", en: "look", cn: "看" }, { icon: "听", en: "listen", cn: "听" }, { icon: "说", en: "speak", cn: "说" },
-    { icon: "玩", en: "play", cn: "玩耍" }, { icon: "洗", en: "wash", cn: "洗" }, { icon: "扫", en: "clean", cn: "打扫" },
-    { icon: "做", en: "cook", cn: "做饭" }, { icon: "买", en: "buy", cn: "购买" }, { icon: "驾", en: "drive", cn: "驾驶" },
-    { icon: "飞", en: "fly", cn: "飞" }, { icon: "爬", en: "climb", cn: "攀爬" }, { icon: "帮", en: "help", cn: "帮助" },
-    { icon: "爱", en: "love", cn: "爱" }
+    { icon: "🏃", en: "run", cn: "跑" }, { icon: "🚶", en: "walk", cn: "走" }, { icon: "🧗", en: "jump", cn: "跳" },
+    { icon: "🏊", en: "swim", cn: "游泳" }, { icon: "💃", en: "dance", cn: "跳舞" }, { icon: "🎤", en: "sing", cn: "唱歌" },
+    { icon: "📖", en: "read", cn: "阅读" }, { icon: "✍️", en: "write", cn: "写字" }, { icon: "🎨", en: "draw", cn: "绘画" },
+    { icon: "🍔", en: "eat", cn: "吃" }, { icon: "🥛", en: "drink", cn: "喝" }, { icon: "😴", en: "sleep", cn: "睡觉" },
+    { icon: "👀", en: "look", cn: "看" }, { icon: "👂", en: "listen", cn: "听" }, { icon: "🗣️", en: "speak", cn: "说" },
+    { icon: "🎮", en: "play", cn: "玩耍" }, { icon: "🧼", en: "wash", cn: "洗" }, { icon: "🧹", en: "clean", cn: "打扫" },
+    { icon: "🍳", en: "cook", cn: "做饭" }, { icon: "🛒", en: "buy", cn: "购买" }, { icon: "🚗", en: "drive", cn: "驾驶" },
+    { icon: "✈️", en: "fly", cn: "飞" }, { icon: "🧗", en: "climb", cn: "攀爬" }, { icon: "🤝", en: "help", cn: "帮助" },
+    { icon: "❤️", en: "love", cn: "爱" }
 ];
 
-// 古诗数据
+// 古诗数据 (带诗意解读)
 const poems = [
-    { title: "咏鹅", author: "[唐] 骆宾王", content: "鹅，鹅，鹅，曲项向天歌。<br>白毛浮绿水，红掌拨清波。" },
-    { title: "静夜思", author: "[唐] 李白", content: "床前明月光，疑是地上霜。<br>举头望明月，低头思故乡。" },
-    { title: "悯农", author: "[唐] 李绅", content: "锄禾日当午，汗滴禾下土。<br>谁知盘中餐，粒粒皆辛苦。" },
-    { title: "春晓", author: "[唐] 孟浩然", content: "春眠不觉晓，处处闻啼鸟。<br>夜来风雨声，花落知多少。" }
+    { 
+        title: "咏鹅", 
+        author: "[唐] 骆宾王", 
+        content: "鹅，鹅，鹅，曲项向天歌。<br>白毛浮绿水，红掌拨清波。",
+        explain: "这首诗描绘了鹅在水中欢快游玩的情景。弯曲着脖子朝天鸣叫，洁白的羽毛浮在绿水上，红色的脚掌划动着清澈的水波，非常生动好看！"
+    },
+    { 
+        title: "静夜思", 
+        author: "[唐] 李白", 
+        content: "床前明月光，疑是地上霜。<br>举头望明月，低头思故乡。",
+        explain: "明亮的月光洒在床前，好像地上铺了一层洁白的霜。诗人抬头看着天上明亮的月亮，低头不由自主地思念起远方的家乡和亲人。"
+    },
+    { 
+        title: "悯农", 
+        author: "[唐] 李绅", 
+        content: "锄禾日当午，汗滴禾下土。<br>谁知盘中餐，粒粒皆辛苦。",
+        explain: "农民伯伯在正午太阳最毒辣的时候下地干活，汗水一滴滴掉进泥土里。有谁知道碗里的每一粒米饭，都是农民伯伯辛辛苦苦换来的呢？我们要珍惜粮食！"
+    },
+    { 
+        title: "春晓", 
+        author: "[唐] 孟浩然", 
+        content: "春眠不觉晓，处处闻啼鸟。<br>夜来风雨声，花落知多少。",
+        explain: "春天夜里睡得很香，不知不觉天就亮了，到处都能听到小鸟欢快的叫声。回想起昨夜的风雨声，不知院子里的花朵被吹落了多少呢？"
+    }
 ];
 
 // 打卡任务与奖励数据
@@ -226,18 +246,21 @@ const rewards = [
 
 // ==================== 3. 页面渲染与交互逻辑 ====================
 
-// 页面加载完成后初始化
+// 单词分页状态 (每次12个)
+let currentWordIndex = 0;
+const WORDS_PER_BATCH = 12;
+
 window.addEventListener('DOMContentLoaded', () => {
     updateStarsDisplay();
     renderPinyin();
     renderAlphabet();
-    renderWords(wordList);
+    renderCurrentWordBatch();
     renderTasks();
     renderRewards();
     generateMathQuestion();
 });
 
-// 切换选项卡
+// 切换 Tab
 function switchTab(tabId) {
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
@@ -249,7 +272,7 @@ function switchTab(tabId) {
     if (targetSec) targetSec.style.display = 'flex';
 }
 
-// 渲染拼音网格
+// 渲染拼音
 function renderPinyin() {
     const container = document.getElementById('pinyin-container');
     container.innerHTML = pinyinData.map(item => `
@@ -260,7 +283,7 @@ function renderPinyin() {
     `).join('');
 }
 
-// 渲染字母网格
+// 渲染字母
 function renderAlphabet() {
     const container = document.getElementById('alphabet-container');
     container.innerHTML = alphabetData.map(item => `
@@ -272,10 +295,23 @@ function renderAlphabet() {
     `).join('');
 }
 
-// 渲染单词卡网格
-function renderWords(list) {
+// 渲染分批单词卡 (每次12个)
+function renderCurrentWordBatch() {
+    const query = document.getElementById('word-search').value.toLowerCase().trim();
+    let filtered = wordList;
+    if (query) {
+        filtered = wordList.filter(item => item.en.toLowerCase().includes(query) || item.cn.includes(query));
+    }
+
+    const batch = filtered.slice(currentWordIndex, currentWordIndex + WORDS_PER_BATCH);
     const container = document.getElementById('words-container');
-    container.innerHTML = list.map(item => `
+    
+    if (batch.length === 0) {
+        container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #a4b0be; padding: 20px;">没有找到匹配的单词哦~</div>`;
+        return;
+    }
+
+    container.innerHTML = batch.map(item => `
         <div class="word-card" onclick="speakWord('${item.en}')">
             <div class="word-icon">${item.icon}</div>
             <div class="word-en">${item.en}</div>
@@ -284,13 +320,27 @@ function renderWords(list) {
     `).join('');
 }
 
-// 单词搜索过滤
-function filterWords() {
+// “换一组”单词
+function nextWordBatch() {
     const query = document.getElementById('word-search').value.toLowerCase().trim();
-    const filtered = wordList.filter(item => 
-        item.en.toLowerCase().includes(query) || item.cn.includes(query)
-    );
-    renderWords(filtered);
+    let filtered = wordList;
+    if (query) {
+        filtered = wordList.filter(item => item.en.toLowerCase().includes(query) || item.cn.includes(query));
+    }
+    
+    if (filtered.length === 0) return;
+
+    currentWordIndex += WORDS_PER_BATCH;
+    if (currentWordIndex >= filtered.length) {
+        currentWordIndex = 0; // 循环回到第一组
+    }
+    renderCurrentWordBatch();
+}
+
+// 搜索框过滤
+function filterWords() {
+    currentWordIndex = 0;
+    renderCurrentWordBatch();
 }
 
 
@@ -382,7 +432,6 @@ function resetTimer() {
 
 
 // ==================== 6. 打卡与奖励系统 ====================
-
 function addStars(num) {
     userStars += num;
     localStorage.setItem('userStars', userStars);
@@ -432,7 +481,7 @@ function redeemReward(cost) {
 }
 
 
-// ==================== 7. 古诗模块 ====================
+// ==================== 7. 古诗模块 (含诗意解读) ====================
 let poemIdx = 0;
 
 function nextPoem() {
@@ -441,10 +490,16 @@ function nextPoem() {
     document.getElementById('poem-title').innerText = p.title;
     document.getElementById('poem-author').innerText = p.author;
     document.getElementById('poem-content').innerHTML = p.content;
+    document.getElementById('poem-explain-text').innerText = p.explain;
 }
 
 function speakCurrentPoem() {
     const p = poems[poemIdx];
     const text = `${p.title}。${p.author}。${p.content.replace(/<br>/g, '，')}`;
     speakText(text, 'zh-CN');
+}
+
+function speakPoemExplain() {
+    const p = poems[poemIdx];
+    speakText(`诗意解读：${p.explain}`, 'zh-CN');
 }
