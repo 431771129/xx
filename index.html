@@ -1,0 +1,195 @@
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幼小衔接成长工作台 - GitHub 开源项目</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 侧边栏导航 -->
+    <div class="sidebar">
+        <div class="brand">
+            <div class="brand-title">🌱 Xuexi</div>
+            <div class="star-badge">⭐ <span id="star-count">12</span></div>
+        </div>
+
+        <div class="nav-group-title">学习板块</div>
+        <div class="nav-item active" onclick="switchTab('all', this)">🏠 首页视图</div>
+        <div class="nav-item" onclick="switchTab('pinyin', this)">🇨🇳 汉语拼音</div>
+        <div class="nav-item" onclick="switchTab('alphabet', this)">🔤 幼升小字母</div>
+        <div class="nav-item" onclick="switchTab('chinese', this)">📖 语文 (唐诗300首)</div>
+        <div class="nav-item" onclick="switchTab('math', this)">🔢 数学 (算术练习)</div>
+        <div class="nav-item" onclick="switchTab('english', this)">🔤 英语 (日常句&单词)</div>
+        <div class="nav-item" onclick="switchTab('exercise', this)">🏃 锻炼 (运动计时)</div>
+
+        <div class="nav-group-title">成长记录</div>
+        <div class="nav-item" onclick="switchTab('tasks', this)">✅ 今日打卡</div>
+        <div class="nav-item" onclick="switchTab('mistakes', this)">📕 错题本</div>
+        <div class="nav-item" onclick="switchTab('rewards', this)">🎁 奖励中心</div>
+
+        <div class="user-card">
+            <div class="user-avatar">🌱</div>
+            <div class="user-info">
+                <div class="user-name">学习小达人</div>
+                <div class="user-level">Lv.1 幼升小衔接中</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        
+        <div class="top-banner">
+            🎈 幼小衔接成长工作台
+        </div>
+
+        <!-- 全局语音朗读控制 -->
+        <div class="tts-controls">
+            <span>🗣️ 儿童专用语音设置：</span>
+            <label>语速: 
+                <input type="range" id="speech-rate" min="0.5" max="1.0" step="0.05" value="0.75" onchange="updateTTSParams()">
+                <span id="rate-val">0.75x (缓速)</span>
+            </label>
+            <label>音调: 
+                <input type="range" id="speech-pitch" min="0.8" max="1.5" step="0.1" value="1.2" onchange="updateTTSParams()">
+                <span id="pitch-val">1.2 (生动)</span>
+            </label>
+        </div>
+
+        <!-- 模块: 汉语拼音 -->
+        <div class="card module-section" id="mod-pinyin">
+            <div class="card-header">
+                <div class="card-title">🇨🇳 汉语拼音启蒙：声母表 (23个)</div>
+                <button class="btn-refresh" onclick="speakText('汉语拼音声母学习开始！点击卡片听标准发音！', 'zh-CN')">🔊 播放指南</button>
+            </div>
+            <p style="font-size: 13px; color: #747d8c;">包含全部 23 个汉语拼音声母（重点高亮 <b style="color:#1e90ff;">zh, ch, sh</b>）。点击卡片听标准发音与关联词汇！</p>
+            <div class="pinyin-grid" id="pinyin-container"></div>
+        </div>
+
+        <!-- 模块: 英文字母 -->
+        <div class="card module-section" id="mod-alphabet">
+            <div class="card-header">
+                <div class="card-title">🔤 幼升小入学常识：字母启蒙 (A - Z)</div>
+                <button class="btn-refresh" onclick="speakText('英语字母学习开始，请点击字母卡片听发音！', 'zh-CN')">🔊 播放指南</button>
+            </div>
+            <p style="font-size: 13px; color: #747d8c;">专为幼升小儿童设计：包含26个字母大小写、关联单词、图片与中文说明，点击卡片即可缓速朗读！</p>
+            <div class="alphabet-grid" id="alphabet-container"></div>
+        </div>
+
+        <!-- 模块: 运动计时 -->
+        <div class="card module-section" id="mod-exercise">
+            <div class="card-header">
+                <div class="card-title">⏰ 1小时运动计时</div>
+            </div>
+            <div class="timer-display" id="timer-text">60:00</div>
+            <div class="timer-actions">
+                <button class="btn-action btn-start" onclick="startTimer()">▶ 开始</button>
+                <button class="btn-action btn-pause" onclick="pauseTimer()">⏸ 暂停</button>
+                <button class="btn-action btn-reset" onclick="resetTimer()">🔄 重置</button>
+            </div>
+        </div>
+
+        <!-- 模块: 算术练习 -->
+        <div class="card module-section" id="mod-math">
+            <div class="card-header">
+                <div class="card-title">🧮 算术练习</div>
+                <button class="btn-refresh" onclick="generateMathQuestion()">🔄 换一道</button>
+            </div>
+            <div class="math-options">
+                <label><input type="radio" name="math-type" value="凑十法" checked onchange="generateMathQuestion()"> 凑十法</label>
+                <label><input type="radio" name="math-type" value="破十法" onchange="generateMathQuestion()"> 破十法</label>
+                <label><input type="radio" name="math-type" value="乘法口诀" onchange="generateMathQuestion()"> 乘法口诀</label>
+                <label><input type="radio" name="math-type" value="综合" onchange="generateMathQuestion()"> 综合</label>
+            </div>
+            <div class="math-question" id="math-q-text">6 + 5 = ?</div>
+            <div class="math-input-group">
+                <input type="number" class="math-input" id="math-ans" placeholder="?" />
+                <button class="btn-submit" id="math-submit-btn" onclick="checkMathAnswer()">提交</button>
+            </div>
+            <div id="math-feedback" style="text-align: center; font-weight: bold;"></div>
+        </div>
+
+        <!-- 模块: 今日打卡 -->
+        <div class="card module-section" id="mod-tasks">
+            <div class="card-header">
+                <div class="card-title">✅ 今日打卡任务</div>
+                <button class="btn-refresh" onclick="resetDailyTasks()">🔄 重置今日任务</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;" id="task-container"></div>
+        </div>
+
+        <!-- 模块: 错题本 -->
+        <div class="card module-section" id="mod-mistakes">
+            <div class="card-header">
+                <div class="card-title">📖 错题复习本</div>
+                <button class="btn-danger" onclick="clearMistakes()">🗑️ 清空错题</button>
+            </div>
+            <div id="mistake-list" style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="color: #747d8c; font-size: 14px;">🎉 暂无错题，太棒啦！</div>
+            </div>
+        </div>
+
+        <!-- 模块: 奖励中心 -->
+        <div class="card module-section" id="mod-rewards">
+            <div class="card-header">
+                <div class="card-title">🎁 奖励中心</div>
+            </div>
+            <p style="font-size: 13px; color: #747d8c;">用你认真学习获得的 ⭐ 星星兑换喜欢的奖励吧！</p>
+            <div class="reward-grid" id="reward-container"></div>
+        </div>
+
+        <!-- 模块: 唐诗 -->
+        <div class="card module-section" id="mod-chinese">
+            <div class="card-header">
+                <div class="card-title">📜 每日一诗 (唐诗300首精选库)</div>
+                <button class="btn-refresh" onclick="nextPoem()">🔄 换一首</button>
+            </div>
+            <input type="text" class="search-input" id="poem-search" placeholder="🔍 搜索古诗题目或作者 (如: 苏轼, 静夜思)..." oninput="searchPoem()">
+            <div class="poem-card-body">
+                <div class="poem-title" id="poem-title">《饮湖上初晴后雨》</div>
+                <div class="poem-author" id="poem-author">宋 · 苏轼</div>
+                <div class="poem-content" id="poem-content">
+                    水光潋滟晴方好，<br>
+                    山色空蒙雨亦奇。<br>
+                    欲把西湖比西子，<br>
+                    淡妆浓抹总相宜。
+                </div>
+                <button class="btn-speak" onclick="readCurrentPoem()">🔊 朗读古诗</button>
+                <div class="poem-details">
+                    <div>📖 <b>译文：</b><span id="poem-trans">晴天时湖面波光粼粼，雨后山色空蒙，各有各的美。如果把西湖比作美女西施，淡妆浓抹都合适。</span></div>
+                    <div>💡 <b>赏析：</b><span id="poem-appr">诗人用西施比喻西湖，形象地写出了西湖无论晴雨都美不胜收。</span></div>
+                    <div>📝 <b>关键词：</b><span id="poem-words"><span class="badge-tag">潋滟(波光闪动)</span> <span class="badge-tag">空蒙(雾气迷蒙)</span></span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 模块: 日常英语 -->
+        <div class="card module-section" id="mod-english">
+            <div class="card-header">
+                <div class="card-title">🗣️ 日常英语 (500句语料库)</div>
+                <button class="btn-refresh" onclick="refreshEnglishSentences()">🔄 换一组</button>
+            </div>
+            <input type="text" class="search-input" id="english-search" placeholder="🔍 搜索日常英语句子 (如: coat, hello, book)..." oninput="searchEnglish()">
+            <div class="english-list" id="english-sentence-container"></div>
+        </div>
+
+        <!-- 模块: 单词卡 -->
+        <div class="card module-section" id="mod-words">
+            <div class="card-header">
+                <div class="card-title">🍎 单词卡</div>
+                <button class="btn-refresh" onclick="refreshWordCards()">🔄 换一组</button>
+            </div>
+            <div class="word-card-grid" id="word-card-container"></div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+```
+
+---
