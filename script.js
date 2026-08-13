@@ -4,20 +4,33 @@ let speechRate = 0.75;
 let speechPitch = 1.2;
 let availableVoices = [];
 
+// 引入错题与打卡任务的本地持久化
+let mistakes = JSON.parse(localStorage.getItem('user_mistakes')) || [];
+let dailyTasks = JSON.parse(localStorage.getItem('user_tasks')) || [
+    { id: 1, title: '📖 朗读一首古诗', reward: 2, done: false },
+    { id: 2, title: '🏃 完成运动 30 分钟', reward: 3, done: false },
+    { id: 3, title: '🧮 完成 5 道算术题', reward: 2, done: false },
+    { id: 4, title: '🔤 认识 5 个英语字母', reward: 1, done: false }
+];
+
 function updateStars(count) {
     currentStars = count;
     localStorage.setItem('user_stars', currentStars);
-    document.getElementById('star-count').innerText = currentStars;
+    const starEl = document.getElementById('star-count');
+    if (starEl) starEl.innerText = currentStars;
 }
 
 function updateTTSParams() {
-    speechRate = parseFloat(document.getElementById('speech-rate').value);
-    speechPitch = parseFloat(document.getElementById('speech-pitch').value);
+    const rateEl = document.getElementById('speech-rate');
+    const pitchEl = document.getElementById('speech-pitch');
+    if (rateEl) speechRate = parseFloat(rateEl.value);
+    if (pitchEl) speechPitch = parseFloat(pitchEl.value);
+    
     document.getElementById('rate-val').innerText = speechRate + 'x (缓速)';
     document.getElementById('pitch-val').innerText = speechPitch + ' (生动)';
 }
 
-// 预加载 Voices 列表机制
+// 预加载 Voices 列表机制 (兼容移动端异步加载)
 function loadVoices() {
     if ('speechSynthesis' in window) {
         availableVoices = window.speechSynthesis.getVoices();
@@ -30,10 +43,10 @@ if ('speechSynthesis' in window) {
 
 function speakText(text, lang = 'zh-CN', callback = null) {
     if (!('speechSynthesis' in window)) {
-        alert("您的浏览器暂不支持语音朗读功能，建议使用 Chrome 或 Safari 浏览器。");
+        alert("您的浏览器暂不支持语音朗读功能，建议使用 Chrome、Edge 或 Safari 浏览器。");
         return;
     }
-    window.speechSynthesis.cancel();
+    window.speechSynthesis.cancel(); // 停止上一段播放，防止音轨叠加
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = lang;
@@ -45,7 +58,12 @@ function speakText(text, lang = 'zh-CN', callback = null) {
     }
 
     if (availableVoices.length > 0) {
-        const targetVoice = availableVoices.find(v => v.lang.includes(lang.split('-')[0]) && (v.name.includes('Xiaoxiao') || v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Siri')));
+        // 优先匹配精准语言 (zh-CN / en-US) 与高清人声
+        const targetVoice = availableVoices.find(v => 
+            v.lang.toLowerCase().replace('_', '-').startsWith(lang.toLowerCase()) && 
+            (v.name.includes('Xiaoxiao') || v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Siri'))
+        ) || availableVoices.find(v => v.lang.toLowerCase().startsWith(lang.split('-')[0]));
+        
         if (targetVoice) utterance.voice = targetVoice;
     }
 
@@ -53,7 +71,7 @@ function speakText(text, lang = 'zh-CN', callback = null) {
     window.speechSynthesis.speak(utterance);
 }
 
-// --- 2. 拼音数据 (标准拟音发音优化) ---
+// --- 2. 拼音数据与渲染 ---
 const pinyinInitialsData = [
     { initial: 'zh', speakSound: '知', word: '蜘蛛', icon: '🕷️', isDouble: true },
     { initial: 'ch', speakSound: '吃', word: '吃苹果', icon: '🍎', isDouble: true },
@@ -82,6 +100,7 @@ const pinyinInitialsData = [
 
 function renderPinyin() {
     const container = document.getElementById('pinyin-container');
+    if (!container) return;
     container.innerHTML = pinyinInitialsData.map(item => `
         <div class="pinyin-card ${item.isDouble ? 'double-letter' : ''}" onclick="speakPinyin('${item.initial}', '${item.speakSound}', '${item.word}')">
             <div class="pinyin-big">${item.initial}</div>
@@ -96,7 +115,7 @@ function speakPinyin(initial, speakSound, word) {
     speakText(`声母 ${initial}，${speakSound}，${word}的 ${initial}`, 'zh-CN');
 }
 
-// --- 3. 英文字母数据 ---
+// --- 3. 英文字母数据与渲染 ---
 const alphabetData = [
     { big: 'A', small: 'a', word: 'Apple', cn: '苹果', icon: '🍎' },
     { big: 'B', small: 'b', word: 'Ball', cn: '皮球', icon: '⚽' },
@@ -128,6 +147,7 @@ const alphabetData = [
 
 function renderAlphabet() {
     const container = document.getElementById('alphabet-container');
+    if (!container) return;
     container.innerHTML = alphabetData.map(item => `
         <div class="letter-card" onclick="speakLetter('${item.big}', '${item.word}', '${item.cn}')">
             <div class="letter-big">${item.big} ${item.small}</div>
@@ -143,13 +163,6 @@ function speakLetter(letter, word, cn) {
 }
 
 // --- 4. 打卡与奖励模块逻辑 ---
-let dailyTasks = [
-    { id: 1, title: '📖 朗读一首古诗', reward: 2, done: false },
-    { id: 2, title: '🏃 完成运动 30 分钟', reward: 3, done: false },
-    { id: 3, title: '🧮 完成 5 道算术题', reward: 2, done: false },
-    { id: 4, title: '🔤 认识 5 个英语字母', reward: 1, done: false }
-];
-
 const rewardsList = [
     { title: '📺 看动画片 20 分钟', cost: 10, icon: '📺' },
     { title: '🍦 吃到美味冰淇淋', cost: 15, icon: '🍦' },
@@ -157,8 +170,13 @@ const rewardsList = [
     { title: '🎡 周末游乐园门票', cost: 50, icon: '🎡' }
 ];
 
+function saveTasks() {
+    localStorage.setItem('user_tasks', JSON.stringify(dailyTasks));
+}
+
 function renderDailyTasks() {
     const container = document.getElementById('task-container');
+    if (!container) return;
     container.innerHTML = dailyTasks.map(t => `
         <div class="task-item">
             <div class="task-info">${t.done ? '✅' : '📌'} ${t.title} <span style="color:#ffa502; font-size:13px;">(+${t.reward}⭐)</span></div>
@@ -173,6 +191,7 @@ function completeTask(id) {
     const task = dailyTasks.find(t => t.id === id);
     if (task && !task.done) {
         task.done = true;
+        saveTasks();
         updateStars(currentStars + task.reward);
         speakText(`太棒啦！完成任务${task.title}，获得 ${task.reward} 颗星星！`, 'zh-CN');
         renderDailyTasks();
@@ -181,12 +200,14 @@ function completeTask(id) {
 
 function resetDailyTasks() {
     dailyTasks.forEach(t => t.done = false);
+    saveTasks();
     renderDailyTasks();
     speakText("今日打卡任务已重置！", 'zh-CN');
 }
 
 function renderRewards() {
     const container = document.getElementById('reward-container');
+    if (!container) return;
     container.innerHTML = rewardsList.map((r, i) => `
         <div class="reward-card">
             <div class="reward-icon">${r.icon}</div>
@@ -209,7 +230,7 @@ function redeemReward(index) {
     }
 }
 
-// --- 5. 唐诗三百首精选库 (搜索逻辑修复) ---
+// --- 5. 唐诗精选库 ---
 const poemDatabase = [
     {
         title: '《饮湖上初晴后雨》',
@@ -308,6 +329,7 @@ let currentEnglishOffset = 0;
 
 function renderEnglishSentences() {
     const container = document.getElementById('english-sentence-container');
+    if (!container) return;
     const items = [];
     for (let i = 0; i < 4; i++) {
         const idx = (currentEnglishOffset + i) % englishSentences.length;
@@ -337,6 +359,7 @@ function searchEnglish() {
     }
     const filtered = englishSentences.filter(s => s.en.toLowerCase().includes(query) || s.cn.includes(query));
     const container = document.getElementById('english-sentence-container');
+    if (!container) return;
     container.innerHTML = filtered.map(s => `
         <div class="english-item">
             <div class="english-text">
@@ -364,6 +387,7 @@ let currentWordOffset = 0;
 
 function renderWordCards() {
     const container = document.getElementById('word-card-container');
+    if (!container) return;
     const items = [];
     for (let i = 0; i < 4; i++) {
         const idx = (currentWordOffset + i) % wordCardsData.length;
@@ -383,15 +407,17 @@ function refreshWordCards() {
     renderWordCards();
 }
 
-// --- 8. 运动计时器逻辑 ---
+// --- 8. 运动计时器 ---
 let timerSeconds = 3600;
 let timerInterval = null;
 
 function updateTimerDisplay() {
     const mins = Math.floor(timerSeconds / 60);
     const secs = timerSeconds % 60;
-    document.getElementById('timer-text').innerText = 
-        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    const timerText = document.getElementById('timer-text');
+    if (timerText) {
+        timerText.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
 }
 
 function startTimer() {
@@ -423,13 +449,14 @@ function resetTimer() {
     updateTimerDisplay();
 }
 
-// --- 9. 数学练习与防刷重复提交逻辑 ---
+// --- 9. 数学练习与错题本持久化 ---
 let currentAns = 11;
-let mistakes = [];
 
 function generateMathQuestion() {
     const inputEl = document.getElementById('math-ans');
     const btnEl = document.getElementById('math-submit-btn');
+    if (!inputEl || !btnEl) return;
+
     inputEl.disabled = false;
     btnEl.disabled = false;
 
@@ -467,6 +494,10 @@ function generateMathQuestion() {
     document.getElementById('math-feedback').innerText = '';
 }
 
+function saveMistakes() {
+    localStorage.setItem('user_mistakes', JSON.stringify(mistakes));
+}
+
 function checkMathAnswer() {
     const inputEl = document.getElementById('math-ans');
     const btnEl = document.getElementById('math-submit-btn');
@@ -489,17 +520,28 @@ function checkMathAnswer() {
         feedback.style.color = '#ff4757';
         feedback.innerText = `❌ 答错啦，正确答案是 ${currentAns}。已计入错题本！`;
         speakText(`答错了哦，正确答案是${currentAns}`, 'zh-CN');
-        mistakes.push(`${qText.replace('?', userAns)} (正确: ${currentAns})`);
-        renderMistakes();
+        
+        // 错题去重保存
+        const mistakeStr = `${qText.replace('?', userAns)} (正确: ${currentAns})`;
+        if (!mistakes.includes(mistakeStr)) {
+            mistakes.push(mistakeStr);
+            saveMistakes();
+            renderMistakes();
+        }
     }
 }
 
 function renderMistakes() {
     const container = document.getElementById('mistake-list');
+    if (!container) return;
     if (mistakes.length === 0) {
         container.innerHTML = `<div style="color: #747d8c; font-size: 14px;">🎉 暂无错题，太棒啦！</div>`;
     } else {
-        container.innerHTML = mistakes.map(m => `<div class="mistake-box">❌ ${m}</div>`).join('');
+        container.innerHTML = mistakes.map((m, idx) => `
+            <div class="mistake-box">
+                <span>❌ ${m}</span>
+            </div>
+        `).join('');
     }
 }
 
@@ -507,12 +549,13 @@ function clearMistakes() {
     if (mistakes.length === 0) return;
     if (confirm("确定要清空错题本吗？")) {
         mistakes = [];
+        saveMistakes();
         renderMistakes();
         speakText("错题本已清空！", 'zh-CN');
     }
 }
 
-// --- 10. Tab 切换逻辑 (优化：每次只显示一个模块，像App一样) ---
+// --- 10. Tab 切换逻辑 ---
 function switchTab(tab, el) {
     if (el) {
         const items = document.querySelectorAll('.nav-item');
@@ -521,14 +564,14 @@ function switchTab(tab, el) {
     }
 
     const modules = document.querySelectorAll('.module-section');
-    // 先全部隐藏
-    modules.forEach(m => m.style.display = 'none');
 
-    // 根据 tab 显示对应模块
     if (tab === 'all') {
-        // 将“首页视图”默认显示拼音模块（您也可以改为欢迎页，但这里保持一致）
-        document.getElementById('mod-pinyin').style.display = 'flex';
+        // 首页视图：展示所有学习模块
+        modules.forEach(m => m.style.display = 'flex');
     } else {
+        // 独立 Tab 视图：先隐藏所有，再按需显示
+        modules.forEach(m => m.style.display = 'none');
+
         if (tab === 'pinyin') document.getElementById('mod-pinyin').style.display = 'flex';
         else if (tab === 'alphabet') document.getElementById('mod-alphabet').style.display = 'flex';
         else if (tab === 'chinese') document.getElementById('mod-chinese').style.display = 'flex';
@@ -536,10 +579,8 @@ function switchTab(tab, el) {
             document.getElementById('mod-math').style.display = 'flex';
             document.getElementById('mod-mistakes').style.display = 'flex';
         }
-        else if (tab === 'english') {
-            document.getElementById('mod-english').style.display = 'flex';
-            document.getElementById('mod-words').style.display = 'flex';
-        }
+        else if (tab === 'english') document.getElementById('mod-english').style.display = 'flex';
+        else if (tab === 'words') document.getElementById('mod-words').style.display = 'flex';
         else if (tab === 'exercise') document.getElementById('mod-exercise').style.display = 'flex';
         else if (tab === 'tasks') document.getElementById('mod-tasks').style.display = 'flex';
         else if (tab === 'mistakes') document.getElementById('mod-mistakes').style.display = 'flex';
@@ -558,17 +599,12 @@ window.onload = function() {
     renderEnglishSentences();
     renderWordCards();
     generateMathQuestion();
+    renderMistakes();
     updateTimerDisplay();
 
-    // 默认只显示拼音模块，并高亮“首页视图”（或第一个导航）
-    const firstNav = document.querySelector('.nav-item.active');
+    // 默认触发第一个 Tab 选中状态
+    const firstNav = document.querySelector('.nav-item');
     if (firstNav) {
-        switchTab('pinyin', firstNav);  // 默认显示拼音
-    } else {
-        const navItems = document.querySelectorAll('.nav-item');
-        if (navItems.length) {
-            navItems[0].classList.add('active');
-            switchTab('pinyin', navItems[0]);
-        }
+        switchTab('all', firstNav);
     }
 };
