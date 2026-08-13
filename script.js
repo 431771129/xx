@@ -1,7 +1,16 @@
 // ==================== 1. 核心 TTS 朗读引擎 ====================
-function speakText(text, lang = 'zh-CN') {
+/**
+ * 语音朗读核心函数
+ * @param {string} text - 朗读文本
+ * @param {string} lang - 语言代码 (如 'zh-CN', 'en-US')
+ * @param {boolean} clearQueue - 是否打断当前正在朗读的声音（默认 true）
+ */
+function speakText(text, lang = 'zh-CN', clearQueue = true) {
     if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel(); // 立即停止上一句
+    
+    if (clearQueue) {
+        window.speechSynthesis.cancel(); // 清空播放队列，立即打断上一句
+    }
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = lang;
@@ -21,9 +30,10 @@ function speakLetter(letter, word) {
     speakText(`${letter}, ${word}`, 'en-US');
 }
 
-// 单词点击：英文单词
-function speakWord(en) {
-    speakText(en, 'en-US');
+// 单词卡点击：【新增】英文朗读完后自动接中文解释
+function speakWord(en, cn) {
+    speakText(en, 'en-US', true);   // 第一步：清空声音，朗读英文
+    speakText(cn, 'zh-CN', false);  // 第二步：放入队列，紧接着朗读中文解释
 }
 
 
@@ -81,13 +91,13 @@ const wordList = [
     // 果蔬 30
     { icon: "🍎", en: "apple", cn: "苹果" }, { icon: "🍌", en: "banana", cn: "香蕉" }, { icon: "🍊", en: "orange", cn: "橙子" },
     { icon: "🍇", en: "grape", cn: "葡萄" }, { icon: "🍉", en: "watermelon", cn: "西瓜" }, { icon: "🍓", en: "strawberry", cn: "草莓" },
-    { icon: "peach", icon: "🍑", en: "peach", cn: "蜜桃" }, { icon: "🍍", en: "pineapple", cn: "菠萝" }, { icon: "🥭", en: "mango", cn: "芒果" },
+    { icon: "🍑", en: "peach", cn: "蜜桃" }, { icon: "🍍", en: "pineapple", cn: "菠萝" }, { icon: "🥭", en: "mango", cn: "芒果" },
     { icon: "🍋", en: "lemon", cn: "柠檬" }, { icon: "🍒", en: "cherry", cn: "樱桃" }, { icon: "🍐", en: "pear", cn: "梨" },
     { icon: "🥑", en: "avocado", cn: "牛油果" }, { icon: "🥥", en: "coconut", cn: "椰子" }, { icon: "🍅", en: "tomato", cn: "番茄" },
     { icon: "🥔", en: "potato", cn: "土豆" }, { icon: "🥕", en: "carrot", cn: "胡萝卜" }, { icon: "🌽", en: "corn", cn: "玉米" },
     { icon: "🥒", en: "cucumber", cn: "黄瓜" }, { icon: "🥦", en: "broccoli", cn: "西兰花" }, { icon: "🧅", en: "onion", cn: "洋葱" },
     { icon: "🧄", en: "garlic", cn: "大蒜" }, { icon: "🍄", en: "mushroom", cn: "蘑菇" }, { icon: "🎃", en: "pumpkin", cn: "南瓜" },
-    { icon: "🍆", en: "eggplant", cn: "茄子" }, { icon: "🌱", en: "bean", cn: "豆角" }, { icon: "🌶️", en: "pepper", cn: "辣椒" },
+    { icon: "茄", en: "eggplant", cn: "茄子" }, { icon: "🌱", en: "bean", cn: "豆角" }, { icon: "🌶️", en: "pepper", cn: "辣椒" },
     { icon: "🥬", en: "cabbage", cn: "卷心菜" }, { icon: "🥗", en: "salad", cn: "沙拉" }, { icon: "🍈", en: "melon", cn: "哈密瓜" },
 
     // 食物与饮品 25
@@ -125,8 +135,7 @@ const wordList = [
     { icon: "🩷", en: "pink", cn: "粉色" }, { icon: "🟤", en: "brown", cn: "棕色" }, { icon: "🖤", en: "black", cn: "黑色" },
     { icon: "⚪", en: "white", cn: "白色" }, { icon: "🩶", en: "gray", cn: "灰色" }, { icon: "🪙", en: "gold", cn: "金色" },
     { icon: "⭕", en: "circle", cn: "圆形" }, { icon: "⏹️", en: "square", cn: "正方形" }, { icon: "🔺", en: "triangle", cn: "三角形" },
-    { icon: "⭐", en: "star", cn: "星形" }, { icon: "❤️", en: "heart", cn: "心形" }, { icon: "🔷", en: "diamond", cn: "菱形" },
-    { icon: "🥚", en: "oval", cn: "椭圆形" }, { icon: "▭", en: "rectangle", cn: "长方形" },
+    { icon: "⭐", en: "star", cn: "星形" }, { icon: "❤️", en: "heart", cn: "心形" }, { icon: "🔷", en: "diamond", cn: "菱形" }, { icon: "🥚", en: "oval", cn: "椭圆形" }, { icon: "▭", en: "rectangle", cn: "长方形" },
 
     // 数字与时间 20
     { icon: "1️⃣", en: "one", cn: "一" }, { icon: "2️⃣", en: "two", cn: "二" }, { icon: "3️⃣", en: "three", cn: "三" },
@@ -311,8 +320,9 @@ function renderCurrentWordBatch() {
         return;
     }
 
+    // 点击单词卡时，同时传入 en 和 cn 两个参数
     container.innerHTML = batch.map(item => `
-        <div class="word-card" onclick="speakWord('${item.en}')">
+        <div class="word-card" onclick="speakWord('${item.en}', '${item.cn}')">
             <div class="word-icon">${item.icon}</div>
             <div class="word-en">${item.en}</div>
             <div class="word-cn">${item.cn}</div>
