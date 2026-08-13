@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <!-- 侧边导航栏 -->
+    <!-- 侧边/顶部导航栏 -->
     <aside class="sidebar">
         <div class="brand">
             <div class="brand-title">🎈 幼升小乐园</div>
@@ -70,12 +70,15 @@
             <div class="alphabet-grid" id="alphabet-container"></div>
         </section>
 
-        <!-- 3. 300英语单词卡模块 -->
+        <!-- 3. 300英语单词卡模块 (增加换一组) -->
         <section id="sec-words" class="card tab-content" style="display:none;">
             <div class="card-header">
                 <h2 class="card-title">🎴 幼升小英语单词卡 (300词)</h2>
             </div>
-            <input type="text" id="word-search" class="search-input" placeholder="🔍 搜索英文或中文单词..." oninput="filterWords()">
+            <div class="word-tools">
+                <input type="text" id="word-search" class="search-input" placeholder="🔍 搜索单词..." oninput="filterWords()">
+                <button class="btn-refresh" onclick="nextWordBatch()">🔄 换一组</button>
+            </div>
             <div class="word-card-grid" id="words-container"></div>
         </section>
 
@@ -133,7 +136,7 @@
             <div class="reward-grid" id="reward-grid"></div>
         </section>
 
-        <!-- 8. 古诗词模块 -->
+        <!-- 8. 古诗词模块 (增加诗意解读) -->
         <section id="sec-poem" class="card tab-content" style="display:none;">
             <div class="card-header">
                 <h2 class="card-title">📜 经典古诗朗读</h2>
@@ -146,7 +149,19 @@
                     鹅，鹅，鹅，曲项向天歌。<br>
                     白毛浮绿水，红掌拨清波。
                 </div>
-                <button class="btn-speak" onclick="speakCurrentPoem()">🔊 完整朗读</button>
+                
+                <!-- 诗意解读区域 -->
+                <div class="poem-explain-box">
+                    <div class="poem-explain-title">💡 诗意解读：</div>
+                    <div class="poem-explain-text" id="poem-explain-text">
+                        这首诗描绘了鹅在水中欢快游玩的情景。弯曲着脖子朝天鸣叫，洁白的羽毛浮在绿水上，红色的脚掌划动着清澈的水波，非常生动好看！
+                    </div>
+                </div>
+
+                <div class="poem-btn-group">
+                    <button class="btn-speak" onclick="speakCurrentPoem()">🔊 朗读古诗</button>
+                    <button class="btn-speak btn-explain-speak" onclick="speakPoemExplain()">🔊 朗读解读</button>
+                </div>
             </div>
         </section>
 
